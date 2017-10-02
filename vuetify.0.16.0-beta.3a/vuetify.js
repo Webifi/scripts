@@ -2130,7 +2130,7 @@ var dimensions = {
       // get z-index for all active dialogs
       var menus = document.getElementsByClassName('menuable__content__active');
       for (var i = 0, l = menus.length; i < l; i += 1) {
-        var menu = menu[i];
+        var menu = menus[i];
         if (thisContent !== menu) {
           zis.push(Object(__WEBPACK_IMPORTED_MODULE_1__util_helpers__["g" /* getZIndex */])(menu));
         }
