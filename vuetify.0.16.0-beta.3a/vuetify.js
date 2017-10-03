@@ -1799,9 +1799,10 @@ function factory() {
     methods: {
       setDependents: function setDependents() {
         var results = [];
-
+        console.log('checking dependents', this);
         if (this.hasDependents) {
           var search = function search(children) {
+            console.log('searching dependents', children);
             var _iteratorNormalCompletion = true;
             var _didIteratorError = false;
             var _iteratorError = undefined;
@@ -1811,6 +1812,7 @@ function factory() {
                 var child = _step.value;
 
                 if (child.dependent || child.hasDependents && child.dependent !== false) {
+                  console.log('found dependent', child);
                   results.push(child);
                 } else {
                   search(child.$children);
@@ -1832,6 +1834,8 @@ function factory() {
             }
           };
           search(this.$children);
+        } else {
+          console.log('will not have dependents', this);
         }
 
         this.dependents = results;
