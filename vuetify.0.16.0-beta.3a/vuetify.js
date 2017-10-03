@@ -288,8 +288,8 @@ function factory() {
 
 
     methods: {
-      getParentToggleable: function getParentToggleable(parent) {
-        parent = parent || this.$parent;
+      getParentToggleable: function getParentToggleable(el) {
+        var parent = el && el.$parent || this.$parent;
         console.log('Searching parent', parent);
         if (parent && parent.parentToggleable !== undefined) {
           console.log('Found parent', parent);
@@ -327,7 +327,7 @@ function factory() {
       }
     },
     beforeDestroy: function beforeDestroy() {
-      if (this.parentToggleable) {
+      if (this.parentToggleable && this.parentToggleable.$off) {
         // Release close event
         console.log('UnBinding inactive event', this.parentToggleable);
         this.parentToggleable.$off('inactive', this.inactiveByParent);
