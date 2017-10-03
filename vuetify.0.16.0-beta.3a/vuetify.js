@@ -269,7 +269,7 @@ __WEBPACK_IMPORTED_MODULE_0__VIcon__["a" /* default */].install = function insta
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function factory() {
-  var _watch;
+  var _props, _watch;
 
   var prop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'value';
   var event = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'input';
@@ -277,20 +277,57 @@ function factory() {
   return {
     model: { prop: prop, event: event },
 
-    props: _defineProperty({}, prop, { required: false }),
+    props: (_props = {}, _defineProperty(_props, prop, { required: false }), _defineProperty(_props, 'inactiveWithParent', Boolean), _props),
 
     data: function data() {
       return {
-        isActive: !!this[prop]
+        isActive: !!this[prop],
+        parentToggleable: null
       };
     },
 
 
+    methods: {
+      getParentToggleable: function getParentToggleable(parent) {
+        parent = parent || this.$parent;
+        if (parent && parent.parentToggleable !== undefined) {
+          return parent;
+        } else if (parent) {
+          return this.getParentToggleable(parent);
+        }
+      },
+      inactiveByParent: function inactiveByParent() {
+        console.log('Parent is unactive', this);
+        if (this.inactiveWithParent) {
+          console.log('going inactive', this);
+          this.isActive = false;
+        }
+      }
+    },
+
     watch: (_watch = {}, _defineProperty(_watch, prop, function (val) {
       this.isActive = !!val;
     }), _defineProperty(_watch, 'isActive', function isActive(val) {
+      if (!val) {
+        this.$emit('inactive', val);
+      }
       !!val !== this[prop] && this.$emit(event, val);
-    }), _watch)
+    }), _watch),
+
+    mounted: function mounted() {
+      // Get any parent toggleable
+      this.parentToggleable = this.getParentToggleable();
+      if (this.parentToggleable) {
+        // bind to its close event
+        this.parentToggleable.$on('inactive', this.inactiveByParent);
+      }
+    },
+    beforeDestroy: function beforeDestroy() {
+      if (this.parentToggleable) {
+        // Release close event
+        this.parentToggleable.$off('inactive', this.inactiveByParent);
+      }
+    }
   };
 }
 
