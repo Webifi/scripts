@@ -289,6 +289,7 @@ function factory() {
 
     methods: {
       getParentToggleable: function getParentToggleable(el, depth) {
+        console.log('Parent:', el, el.$parent);
         if (true) return null;
         depth = depth || 0;
         if (depth > 10) {
