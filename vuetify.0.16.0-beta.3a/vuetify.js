@@ -1437,12 +1437,34 @@ __webpack_require__(73);
       var zis = [200];
       // get z-index for all active dialogs
       var activeDialogs = document.getElementsByClassName('dialog__content__active');
-      for (var i = 0, l = activeDialogs.length; i < l; i += 1) {
-        if (thisContent !== activeDialogs[i]) {
-          zis.push(Object(__WEBPACK_IMPORTED_MODULE_5__util_helpers__["g" /* getZIndex */])(activeDialogs[i]));
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = activeDialogs[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var activeDialog = _step.value;
+
+          if (thisContent !== activeDialog) {
+            zis.push(Object(__WEBPACK_IMPORTED_MODULE_5__util_helpers__["g" /* getZIndex */])(activeDialog));
+          }
+        }
+        // Return max current z-index + 2 (overlay will be this z-index - 1)
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
         }
       }
-      // Return max current z-index + 2 (overlay will be this z-index - 1)
+
       return Math.max.apply(Math, zis) + 2;
     }
   },
@@ -1819,6 +1841,34 @@ function factory() {
     watch: {
       hasDependents: function hasDependents(val) {
         this.setDependents();
+      },
+      isActive: function isActive(val) {
+        if (!val) {
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = this.dependents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var dependent = _step2.value;
+
+              if (dependent.isActive) dependent.isActive = false;
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
+            }
+          }
+        }
       }
     },
 
@@ -2224,16 +2274,36 @@ var dimensions = {
       var zis = [6, this.$el ? Object(__WEBPACK_IMPORTED_MODULE_1__util_helpers__["g" /* getZIndex */])(this.$el) : 0];
       // get z-index for all active dialogs
       var menus = document.getElementsByClassName('menuable__content__active');
-      for (var i = 0, l = menus.length; i < l; i += 1) {
-        var menu = menus[i];
-        if (thisContent !== menu) {
-          zis.push(Object(__WEBPACK_IMPORTED_MODULE_1__util_helpers__["g" /* getZIndex */])(menu));
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = menus[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var menu = _step.value;
+
+          if (thisContent !== menu) {
+            zis.push(Object(__WEBPACK_IMPORTED_MODULE_1__util_helpers__["g" /* getZIndex */])(menu));
+          }
+        }
+        // Return max current z-index + 2 (overlay will be this z-index - 1)
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
         }
       }
-      // Return max current z-index + 2 (overlay will be this z-index - 1)
+
       return Math.max.apply(Math, zis) + 2;
-    },
-    classes: function classes() {}
+    }
   },
 
   watch: {
