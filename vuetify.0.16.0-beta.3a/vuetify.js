@@ -290,11 +290,14 @@ function factory() {
     methods: {
       getParentToggleable: function getParentToggleable(parent) {
         parent = parent || this.$parent;
+        console.log('Searching parent', parent);
         if (parent && parent.parentToggleable !== undefined) {
+          console.log('Found parent', parent);
           return parent;
         } else if (parent) {
           return this.getParentToggleable(parent);
         }
+        return null;
       },
       inactiveByParent: function inactiveByParent() {
         console.log('Parent is unactive', this);
@@ -319,12 +322,14 @@ function factory() {
       this.parentToggleable = this.getParentToggleable();
       if (this.parentToggleable) {
         // bind to its close event
+        console.log('Binding inactive event', this.parentToggleable);
         this.parentToggleable.$on('inactive', this.inactiveByParent);
       }
     },
     beforeDestroy: function beforeDestroy() {
       if (this.parentToggleable) {
         // Release close event
+        console.log('UnBinding inactive event', this.parentToggleable);
         this.parentToggleable.$off('inactive', this.inactiveByParent);
       }
     }
