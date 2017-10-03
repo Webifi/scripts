@@ -289,6 +289,7 @@ function factory() {
 
     methods: {
       getParentToggleable: function getParentToggleable(el, depth) {
+        if (true) return null;
         depth = depth || 0;
         if (depth > 10) {
           console.warn('Max parent search reached', this, el);
@@ -316,10 +317,8 @@ function factory() {
     watch: (_watch = {}, _defineProperty(_watch, prop, function (val) {
       this.isActive = !!val;
     }), _defineProperty(_watch, 'isActive', function isActive(val) {
-      if (!val) {
-        this.$emit('inactive', val);
-      }
       !!val !== this[prop] && this.$emit(event, val);
+      !!val !== this[prop] && !val && this.$emit('inactive', val);
     }), _watch),
 
     mounted: function mounted() {
