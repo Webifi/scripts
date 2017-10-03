@@ -288,14 +288,19 @@ function factory() {
 
 
     methods: {
-      getParentToggleable: function getParentToggleable(el) {
-        var parent = el && el.$parent || this.$parent;
+      getParentToggleable: function getParentToggleable(el, depth) {
+        depth = depth || 0;
+        if (depth > 10) {
+          console.warn('Max parent search reached', this, el);
+          return null;
+        }
+        var parent = el.$parent;
         console.log('Searching parent', parent);
         if (parent && parent.parentToggleable !== undefined) {
           console.log('Found parent', parent);
           return parent;
         } else if (parent) {
-          return this.getParentToggleable(parent);
+          return this.getParentToggleable(parent, depth += 1);
         }
         return null;
       },
@@ -319,7 +324,7 @@ function factory() {
 
     mounted: function mounted() {
       // Get any parent toggleable
-      this.parentToggleable = this.getParentToggleable();
+      this.parentToggleable = this.getParentToggleable(this);
       if (this.parentToggleable) {
         // bind to its close event
         console.log('Binding inactive event', this.parentToggleable);
