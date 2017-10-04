@@ -405,7 +405,10 @@ function directive(e, el, binding, v) {
   if (binding.value) cb = binding.value;
 
   if (v.context.isActive && !clickedInEl(e, el, binding.include) && cb(e)) {
-    v.context.isActive = false;
+    setTimeout(function () {
+      return v.context.isActive = false;
+    }, 0);
+    // v.context.isActive = false
   }
 }
 
