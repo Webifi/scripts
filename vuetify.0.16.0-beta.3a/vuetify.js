@@ -408,7 +408,6 @@ function directive(e, el, binding, v) {
     setTimeout(function () {
       return v.context.isActive = false;
     }, 0);
-    // v.context.isActive = false
   }
 }
 
@@ -1655,7 +1654,9 @@ var Dependent = Object(__WEBPACK_IMPORTED_MODULE_3__mixins_dependent__["b" /* fa
   methods: {
     closeConditional: function closeConditional(e) {
       // close dialog if !persistent and doesn't have an overlay (clicked overlay will close dialog), and clicked outside
-      return !this.persistent && !this.hideOverlay;
+      var result = !this.persistent && this.hideOverlay;
+      if (result) e.stopPropagation(); // If we're going to close this dialog, stop propagaton so we don't close others below us as well.
+      return result;
     }
   },
 
