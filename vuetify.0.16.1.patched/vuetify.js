@@ -1205,31 +1205,24 @@ __WEBPACK_IMPORTED_MODULE_1__VCard__["a" /* default */].install = function insta
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["b"] = factory;
 function factory() {
-  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { findDependents: true };
+  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { closeDependents: true };
 
   return {
-    data: function data() {
-      return {
-        dependents: []
-      };
-    },
-
-
     props: {
-      findDependents: {
+      closeDependents: {
         type: Boolean,
-        default: opts.findDependents
+        default: opts.closeDependents
       },
-      dependent: {
+      isDependent: {
         type: Boolean,
-        default: opts.dependent
+        default: opts.isDependent
       }
     },
 
     methods: {
-      setDependents: function setDependents() {
+      getCloseableDependents: function getCloseableDependents() {
         var results = [];
-        if (this.findDependents) {
+        if (this.closeDependents) {
           var search = function search(children) {
             var _iteratorNormalCompletion = true;
             var _didIteratorError = false;
@@ -1239,7 +1232,7 @@ function factory() {
               for (var _iterator = children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                 var child = _step.value;
 
-                if (child.dependent || child.findDependents && child.dependent !== false) {
+                if (child.isActive && (child.isDependent || child.closeDependents && child.isDependent !== false)) {
                   results.push(child);
                 } else {
                   search(child.$children);
@@ -1262,26 +1255,22 @@ function factory() {
           };
           search(this.$children);
         }
-
-        this.dependents = results;
+        return results;
       }
     },
 
     watch: {
-      findDependents: function findDependents(val) {
-        this.setDependents();
-      },
-      isActive: function isActive(val) {
-        if (!val) {
+      isActive: function isActive(val, oldVal) {
+        if (!val && val !== oldVal) {
           var _iteratorNormalCompletion2 = true;
           var _didIteratorError2 = false;
           var _iteratorError2 = undefined;
 
           try {
-            for (var _iterator2 = this.dependents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            for (var _iterator2 = this.getCloseableDependents()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
               var dependent = _step2.value;
 
-              if (dependent.isActive) dependent.isActive = false;
+              dependent.isActive = false;
             }
           } catch (err) {
             _didIteratorError2 = true;
@@ -1299,17 +1288,6 @@ function factory() {
           }
         }
       }
-    },
-
-    mounted: function mounted() {
-      var _this = this;
-
-      this.$vuetify.load(function () {
-        return _this.setDependents();
-      });
-    },
-    updated: function updated() {
-      this.setDependents();
     }
   };
 }
@@ -1544,7 +1522,7 @@ __webpack_require__(74);
 
 
 
-var Dependent = Object(__WEBPACK_IMPORTED_MODULE_3__mixins_dependent__["b" /* factory */])({ findDependents: true, dependent: false });
+var Dependent = Object(__WEBPACK_IMPORTED_MODULE_3__mixins_dependent__["b" /* factory */])({ closeDependents: true, isDependent: false });
 
 
 
@@ -15719,7 +15697,7 @@ __webpack_require__(214);
 
 
 
-var Dependent = Object(__WEBPACK_IMPORTED_MODULE_4__mixins_dependent__["b" /* factory */])({ dependent: true });
+var Dependent = Object(__WEBPACK_IMPORTED_MODULE_4__mixins_dependent__["b" /* factory */])({ isDependent: true });
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'v-tooltip',
