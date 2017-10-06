@@ -398,21 +398,34 @@ function install(Vue) {
 
 "use strict";
 function directive(e, el, binding, v) {
-  if (!e || !v.context.isActive) return;
+  // The include element callbacks below can be expensive
+  // so we should avoid calling them when we're not active.
+  // Explicitly check for false to allow fallback compatibility 
+  // with non-toggleable components
+  if (!e || v.context.isActive === false) return;
 
+  // Get value passed to directive
   var val = binding.value || function () {
     return true;
   };
   // Check if callback was passed in object or as the value
   var cb = val.callback || val;
   // Check if additional elements were passed to be included in check
+  // (click must be outside all included elements, if any)
   var elements = (val.include || function () {
     return [];
   })();
-  // Add the element this directive was defined on
+  // Add the root element for the component this directive was defined on
   elements.push(el);
 
+  // Check if it's a click outside our elements, and then if our callback returns true.
+  // Non-toggleable components should take action in their callback and return falsy.
+  // Toggleable can return true if it wants to deactivate.
+  // Note that, because we're in the capture phase, this callback will occure before
+  // the bubbling click event on any outside elements. 
   if (!clickedInEls(e, elements) && cb(e)) {
+    // Delay setting toggleable inactive to avoid conflicting 
+    // with an outside click on any activator toggling our state.
     setTimeout(function () {
       return v.context.isActive = false;
     }, 0);
@@ -421,9 +434,10 @@ function directive(e, el, binding, v) {
 
 function clickedInEls(e, elements) {
   // Get position of click
-  var x = e.clientX;
-  var y = e.clientY;
+  var x = e.clientX,
+      y = e.clientY;
   // Loop over all included elements to see if click was in any of them
+
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
@@ -453,7 +467,9 @@ function clickedInEls(e, elements) {
 }
 
 function clickedInEl(el, x, y) {
-  // Get bounding rect for element (we're in capturing event so can't trust target)
+  // Get bounding rect for element 
+  // (we're in capturing event and we want to check for multiple elements,
+  //  so can't use target.)
   var b = el.getBoundingClientRect();
   // Check if the click was in the element's bounding rect
   return x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
@@ -467,6 +483,8 @@ function clickedInEl(el, x, y) {
       var onClick = function onClick(e) {
         return directive(e, el, binding, v);
       };
+      // Use capturing event so we avoid being blocked by 
+      // stopPropagation in bubbling phase
       document.addEventListener('click', onClick, true);
       el._clickOutside = onClick;
     });
@@ -1172,9 +1190,33 @@ function factory() {
         return [];
       },
       getOpenDependentElements: function getOpenDependentElements() {
-        return this.getOpenDependents().map(function (d) {
-          return d.getClickableDependentElements();
-        });
+        var result = [];
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = this.getOpenDependents()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var dependent = _step2.value;
+
+            result.push.apply(result, _toConsumableArray(dependent.getClickableDependentElements()));
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+
+        return result;
       },
       getClickableDependentElements: function getClickableDependentElements() {
         var result = [this.$el];
@@ -1187,27 +1229,27 @@ function factory() {
     watch: {
       isActive: function isActive(val) {
         if (!val) {
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
+          var _iteratorNormalCompletion3 = true;
+          var _didIteratorError3 = false;
+          var _iteratorError3 = undefined;
 
           try {
-            for (var _iterator2 = this.getOpenDependents()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var dependent = _step2.value;
+            for (var _iterator3 = this.getOpenDependents()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var dependent = _step3.value;
 
               dependent.isActive = false;
             }
           } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
+              if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
               }
             } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
+              if (_didIteratorError3) {
+                throw _iteratorError3;
               }
             }
           }
@@ -7922,13 +7964,8 @@ __webpack_require__(108);
 
       return [{
         name: 'click-outside',
-        value: {
-          callback: function callback() {
-            return _this9.isActive = false;
-          },
-          include: function include() {
-            return _this9.closeDependents ? _this9.getOpenDependentElements() : [];
-          }
+        value: function value() {
+          return _this9.isActive = false;
         }
       }];
     },
