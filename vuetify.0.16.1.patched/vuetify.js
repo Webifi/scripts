@@ -8598,15 +8598,6 @@ __webpack_require__(115);
   },
 
   render: function render(h) {
-    // Do not add click outside for hover menu
-    var directives = [{
-      name: 'resize',
-      value: {
-        debounce: 500,
-        value: this.onResize
-      }
-    }];
-
     var data = {
       staticClass: 'menu',
       class: {
@@ -8615,7 +8606,13 @@ __webpack_require__(115);
       style: {
         display: this.fullWidth ? 'block' : 'inline-block'
       },
-      directives: directives,
+      directives: [{
+        name: 'resize',
+        value: {
+          debounce: 500,
+          value: this.onResize
+        }
+      }],
       on: {
         keydown: this.changeListIndex
       }
@@ -8742,7 +8739,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         }
       }, [this.genContent()]);
     },
-    genContent: function genContent() {
+    genDirectives: function genDirectives() {
       var _this = this;
 
       // Do not add click outside for hover menu
@@ -8762,17 +8759,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         name: 'show',
         value: this.isContentActive
       });
+      return directives;
+    },
+    genContent: function genContent() {
+      var _this2 = this;
 
       var options = {
         'class': [('menu__content ' + this.contentClass).trim(), { 'menuable__content__active': this.isActive }],
         style: this.styles,
-        directives: directives,
+        directives: this.genDirectives(),
         ref: 'content',
         on: {
           click: function click(e) {
             e.stopPropagation();
             if (e.target.getAttribute('disabled')) return;
-            if (_this.closeOnContentClick) _this.isActive = false;
+            if (_this2.closeOnContentClick) _this2.isActive = false;
           }
         }
       };
