@@ -243,6 +243,7 @@ function getZIndex(el) {
   if (!el || el.nodeType !== Node.ELEMENT_NODE) return 0;
   var zi = document.defaultView.getComputedStyle(el).getPropertyValue('z-index');
   if (isNaN(zi)) return getZIndex(el.parentNode);
+
   return zi;
 }
 
@@ -472,6 +473,7 @@ function clickedInEl(el, x, y) {
   //  so can't use target.)
   var b = el.getBoundingClientRect();
   // Check if the click was in the element's bounding rect
+
   return x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
 }
 
@@ -1144,7 +1146,7 @@ function searchChildren(children) {
     for (var _iterator = children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var child = _step.value;
 
-      if (child.isActive && (child.isDependent || child.closeDependents && child.isDependent !== false)) {
+      if (child.isActive && child.isDependent) {
         results.push(child);
       } else {
         results.push.apply(results, _toConsumableArray(searchChildren(child.$children)));
@@ -1172,7 +1174,7 @@ function searchChildren(children) {
   data: function data() {
     return {
       closeDependents: true,
-      isDependent: null
+      isDependent: true
     };
   },
 
@@ -1180,6 +1182,7 @@ function searchChildren(children) {
   methods: {
     getOpenDependents: function getOpenDependents() {
       if (this.closeDependents) return searchChildren(this.$children);
+
       return [];
     },
     getOpenDependentElements: function getOpenDependentElements() {
@@ -1215,35 +1218,36 @@ function searchChildren(children) {
       var result = [this.$el];
       if (this.$refs.content) result.push(this.$refs.content);
       result.push.apply(result, _toConsumableArray(this.getOpenDependentElements()));
+
       return result;
     }
   },
 
   watch: {
     isActive: function isActive(val) {
-      if (!val) {
-        var _iteratorNormalCompletion3 = true;
-        var _didIteratorError3 = false;
-        var _iteratorError3 = undefined;
+      if (val) return;
 
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = this.getOpenDependents()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var dependent = _step3.value;
+
+          dependent.isActive = false;
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
         try {
-          for (var _iterator3 = this.getOpenDependents()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var dependent = _step3.value;
-
-            dependent.isActive = false;
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
           }
-        } catch (err) {
-          _didIteratorError3 = true;
-          _iteratorError3 = err;
         } finally {
-          try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-              _iterator3.return();
-            }
-          } finally {
-            if (_didIteratorError3) {
-              throw _iteratorError3;
-            }
+          if (_didIteratorError3) {
+            throw _iteratorError3;
           }
         }
       }
@@ -1674,9 +1678,7 @@ __webpack_require__(76);
         name: 'click-outside',
         value: {
           callback: this.closeConditional,
-          include: function include() {
-            return _this2.getOpenDependentElements();
-          }
+          include: this.getOpenDependentElements
         }
       }, { name: 'show', value: this.isActive }],
       on: { click: function click(e) {
@@ -1956,9 +1958,11 @@ __webpack_require__(77);
       var content = this.stackElement || this.$refs.content;
       if (!this.isActive) {
         // Return current zindex if not active
+
         return Object(__WEBPACK_IMPORTED_MODULE_0__util_helpers__["g" /* getZIndex */])(content);
       }
       // Return max current z-index (excluding self) + 2 (2 to leave room for an overlay below, if needed)
+
       return this.getMaxZIndex((this.stackExclude || function () {
         return [content];
       })()) + 2;
@@ -8791,6 +8795,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         name: 'show',
         value: this.isContentActive
       });
+
       return directives;
     },
     genContent: function genContent() {
