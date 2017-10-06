@@ -1132,7 +1132,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = factory;
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function searchChildren(children) {
@@ -1169,99 +1168,88 @@ function searchChildren(children) {
   return results;
 }
 
-function factory() {
-  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { closeDependents: true };
+/* harmony default export */ __webpack_exports__["a"] = ({
+  data: function data() {
+    return {
+      closeDependents: true,
+      isDependent: null
+    };
+  },
 
-  return {
-    props: {
-      closeDependents: {
-        type: Boolean,
-        default: opts.closeDependents
-      },
-      isDependent: {
-        type: Boolean,
-        default: opts.isDependent
-      }
+
+  methods: {
+    getOpenDependents: function getOpenDependents() {
+      if (this.closeDependents) return searchChildren(this.$children);
+      return [];
     },
+    getOpenDependentElements: function getOpenDependentElements() {
+      var result = [];
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
-    methods: {
-      getOpenDependents: function getOpenDependents() {
-        if (this.closeDependents) return searchChildren(this.$children);
-        return [];
-      },
-      getOpenDependentElements: function getOpenDependentElements() {
-        var result = [];
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
+      try {
+        for (var _iterator2 = this.getOpenDependents()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var dependent = _step2.value;
 
+          result.push.apply(result, _toConsumableArray(dependent.getClickableDependentElements()));
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
         try {
-          for (var _iterator2 = this.getOpenDependents()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var dependent = _step2.value;
-
-            result.push.apply(result, _toConsumableArray(dependent.getClickableDependentElements()));
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
           }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
         } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-              _iterator2.return();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
+          if (_didIteratorError2) {
+            throw _iteratorError2;
           }
         }
-
-        return result;
-      },
-      getClickableDependentElements: function getClickableDependentElements() {
-        var result = [this.$el];
-        if (this.$refs.content) result.push(this.$refs.content);
-        result.push.apply(result, _toConsumableArray(this.getOpenDependentElements()));
-        return result;
       }
+
+      return result;
     },
+    getClickableDependentElements: function getClickableDependentElements() {
+      var result = [this.$el];
+      if (this.$refs.content) result.push(this.$refs.content);
+      result.push.apply(result, _toConsumableArray(this.getOpenDependentElements()));
+      return result;
+    }
+  },
 
-    watch: {
-      isActive: function isActive(val) {
-        if (!val) {
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+  watch: {
+    isActive: function isActive(val) {
+      if (!val) {
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
 
+        try {
+          for (var _iterator3 = this.getOpenDependents()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var dependent = _step3.value;
+
+            dependent.isActive = false;
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
           try {
-            for (var _iterator3 = this.getOpenDependents()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var dependent = _step3.value;
-
-              dependent.isActive = false;
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
             }
-          } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
           } finally {
-            try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
-              }
-            } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
-              }
+            if (_didIteratorError3) {
+              throw _iteratorError3;
             }
           }
         }
       }
     }
-  };
-}
-
-var Dependent = factory();
-
-/* harmony default export */ __webpack_exports__["a"] = (Dependent);
+  }
+});
 
 /***/ }),
 /* 16 */
@@ -1593,17 +1581,23 @@ __webpack_require__(76);
 // Helpers
 
 
-var Dependent = Object(__WEBPACK_IMPORTED_MODULE_0__mixins_dependent__["b" /* factory */])({ closeDependents: true, isDependent: false });
-var Stackable = Object(__WEBPACK_IMPORTED_MODULE_3__mixins_stackable__["a" /* factory */])({ minZIndex: 200, stackClass: 'dialog__content__active' });
-
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'v-dialog',
 
-  mixins: [Dependent, __WEBPACK_IMPORTED_MODULE_1__mixins_detachable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_2__mixins_overlayable__["a" /* default */], Stackable, __WEBPACK_IMPORTED_MODULE_4__mixins_toggleable__["a" /* default */]],
+  mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_dependent__["a" /* default */], __WEBPACK_IMPORTED_MODULE_1__mixins_detachable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_2__mixins_overlayable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_3__mixins_stackable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_4__mixins_toggleable__["a" /* default */]],
 
   directives: {
     ClickOutside: __WEBPACK_IMPORTED_MODULE_5__directives_click_outside__["a" /* default */]
   },
+
+  data: function data() {
+    return {
+      isDependent: false,
+      stackClass: 'dialog__content__active',
+      stackMinZIndex: 200
+    };
+  },
+
 
   props: {
     disabled: Boolean,
@@ -1943,72 +1937,73 @@ __webpack_require__(77);
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = factory;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util_helpers__ = __webpack_require__(1);
 
 
-function factory() {
-  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { stackClass: 'unspecified' };
+/* harmony default export */ __webpack_exports__["a"] = ({
+  data: function data() {
+    return {
+      stackBase: null,
+      stackClass: 'unpecified',
+      stackElement: null,
+      stackExclude: null,
+      stackMinZIndex: 0
+    };
+  },
 
-  return {
-    computed: {
-      activeZIndex: function activeZIndex() {
-        var content = opts.content || this.$refs.content;
-        if (!this.isActive) {
-          // Return current zindex if not active
-          return Object(__WEBPACK_IMPORTED_MODULE_0__util_helpers__["g" /* getZIndex */])(content);
-        }
-        // Return max current z-index (excluding self) + 2 (2 to leave room for an overlay below, if needed)
-        return this.getMaxZIndex((opts.exclude || function () {
-          return [content];
-        })()) + 2;
+  computed: {
+    activeZIndex: function activeZIndex() {
+      var content = this.stackElement || this.$refs.content;
+      if (!this.isActive) {
+        // Return current zindex if not active
+        return Object(__WEBPACK_IMPORTED_MODULE_0__util_helpers__["g" /* getZIndex */])(content);
       }
-    },
-    methods: {
-      getMaxZIndex: function getMaxZIndex() {
-        var exclude = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-
-        var base = opts.base || this.$el;
-        // start with lowest allowed z-index or z-index of base component's element, whichever is greater
-        var zis = [opts.minZIndex, Object(__WEBPACK_IMPORTED_MODULE_0__util_helpers__["g" /* getZIndex */])(base)];
-        // get z-index for all active dialogs
-        var activeElements = document.getElementsByClassName(opts.stackClass);
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = activeElements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var activeElement = _step.value;
-
-            if (!exclude.includes(activeElement)) {
-              zis.push(Object(__WEBPACK_IMPORTED_MODULE_0__util_helpers__["g" /* getZIndex */])(activeElement));
-            }
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-
-        return Math.max.apply(Math, zis);
-      }
+      // Return max current z-index (excluding self) + 2 (2 to leave room for an overlay below, if needed)
+      return this.getMaxZIndex((this.stackExclude || function () {
+        return [content];
+      })()) + 2;
     }
-  };
-}
+  },
+  methods: {
+    getMaxZIndex: function getMaxZIndex() {
+      var exclude = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-var Stackable = factory();
+      var base = this.stackBase || this.$el;
+      // start with lowest allowed z-index or z-index of base component's element, whichever is greater
+      var zis = [this.stackMinZIndex, Object(__WEBPACK_IMPORTED_MODULE_0__util_helpers__["g" /* getZIndex */])(base)];
+      // get z-index for all active dialogs
+      var activeElements = document.getElementsByClassName(this.stackClass);
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-/* unused harmony default export */ var _unused_webpack_default_export = (Stackable);
+      try {
+        for (var _iterator = activeElements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var activeElement = _step.value;
+
+          if (!exclude.includes(activeElement)) {
+            zis.push(Object(__WEBPACK_IMPORTED_MODULE_0__util_helpers__["g" /* getZIndex */])(activeElement));
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return Math.max.apply(Math, zis);
+    }
+  }
+});
 
 /***/ }),
 /* 29 */
@@ -2362,8 +2357,6 @@ __WEBPACK_IMPORTED_MODULE_0__VMenu__["a" /* default */].install = function insta
 
 
 
-var Stackable = Object(__WEBPACK_IMPORTED_MODULE_1__stackable__["a" /* factory */])({ minZIndex: 6, stackClass: 'menuable__content__active' });
-
 var dimensions = {
   activator: {
     top: 0, left: 0,
@@ -2390,7 +2383,7 @@ var dimensions = {
    * As well as be manually positioned
    */
 };/* harmony default export */ __webpack_exports__["a"] = ({
-  mixins: [__WEBPACK_IMPORTED_MODULE_0__positionable__["a" /* default */], Stackable],
+  mixins: [__WEBPACK_IMPORTED_MODULE_0__positionable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_1__stackable__["a" /* default */]],
 
   data: function data() {
     return {
@@ -2398,7 +2391,9 @@ var dimensions = {
       absoluteY: 0,
       dimensions: Object.assign({}, dimensions),
       isContentActive: false,
-      pageYOffset: 0
+      pageYOffset: 0,
+      stackClass: 'menuable__content__active',
+      stackMinZIndex: 6
     };
   },
 
@@ -15796,9 +15791,9 @@ __WEBPACK_IMPORTED_MODULE_0__VTooltip__["a" /* default */].install = function in
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_delayable__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_dependent__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_colorable__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_colorable__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_delayable__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_dependent__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_detachable__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_menuable__ = __webpack_require__(39);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_toggleable__ = __webpack_require__(4);
@@ -15817,7 +15812,7 @@ __webpack_require__(216);
 /* harmony default export */ __webpack_exports__["a"] = ({
   name: 'v-tooltip',
 
-  mixins: [__WEBPACK_IMPORTED_MODULE_2__mixins_colorable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_1__mixins_dependent__["a" /* default */], __WEBPACK_IMPORTED_MODULE_0__mixins_delayable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_3__mixins_detachable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_4__mixins_menuable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_5__mixins_toggleable__["a" /* default */]],
+  mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_colorable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_1__mixins_delayable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_2__mixins_dependent__["a" /* default */], __WEBPACK_IMPORTED_MODULE_3__mixins_detachable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_4__mixins_menuable__["a" /* default */], __WEBPACK_IMPORTED_MODULE_5__mixins_toggleable__["a" /* default */]],
 
   data: function data() {
     return {
