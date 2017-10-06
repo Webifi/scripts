@@ -1645,8 +1645,7 @@ var Stackable = Object(__WEBPACK_IMPORTED_MODULE_3__mixins_stackable__["a" /* fa
       }, { name: 'show', value: this.isActive }],
       on: { click: function click(e) {
           return e.stopPropagation();
-        }
-      }
+        } }
     };
 
     if (!this.fullscreen) {
